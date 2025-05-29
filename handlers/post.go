@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	"database"
-	"models"
+	"moonglow/database"
+	"moonglow/models"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 // получение списка всех продуктов
-func GetProducts(c *fiber.Ctx) error {
+func GetPosts(c *fiber.Ctx) error {
 	rows, err := database.DB.Query("SELECT id, name, description, price, stock, image_url FROM products")
 	if err != nil {
 		return c.Status(500).SendString("Ошибка выполнения запроса к базе данных")
@@ -17,26 +17,26 @@ func GetProducts(c *fiber.Ctx) error {
 
 	var posts []models.Post
 	for rows.Next() {
-		var product models.Post
+		var post models.Post
 		err := rows.Scan(&post.ID, &post.Name, &post.Description, &post.Price, &post.Stock, &post.ImageURL)
 		if err != nil {
 			return c.Status(500).SendString("Ошибка сканирования данных")
 		}
-		products = append(posts, post)
+		posts = append(posts, post)
 	}
 
 	return c.JSON(posts)
 }
 
 // создание нового продукта
-func CreateProduct(c *fiber.Ctx) error {
-	product := new(models.Post)
+func CreatePost(c *fiber.Ctx) error {
+	post := new(models.Post)
 	if err := c.BodyParser(post); err != nil {
 		return c.Status(400).SendString("Неверный формат запроса")
 	}
 
 	_, err := database.DB.Exec("INSERT INTO products (name, description, price, stock, image_url) VALUES ($1, $2, $3, $4, $5)",
-		product.Name, post.Description, post.Price, post.Stock, post.ImageURL)
+		post.Name, post.Description, post.Price, post.Stock, post.ImageURL)
 	if err != nil {
 		return c.Status(500).SendString("Ошибка вставки данных в базу")
 	}
@@ -61,7 +61,7 @@ func GetPost(c *fiber.Ctx) error {
 // обновление продукта
 func UpdatePost(c *fiber.Ctx) error {
 	id := c.Params("id")
-	product := new(models.Post)
+	post := new(models.Post)
 
 	if err := c.BodyParser(post); err != nil {
 		return c.Status(400).SendString("Неверный формат запроса")

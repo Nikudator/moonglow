@@ -1,17 +1,17 @@
 package routes
 
 import (
-	"handlers"
+	"moonglow/handlers"
 
-	"github.com/gofiber/fiber"
+	"github.com/gofiber/fiber/v2"
 )
 
 func RegisterProductRoutes(app *fiber.App) {
 	api := app.Group("/api")
 
-	api.Get("/posts", handlers.GetProducts)
-	api.Post("/posts", handlers.CreateProduct)
-	api.Get("/posts/:id", handlers.GetProduct)
-	api.Put("/posts/:id", handlers.UpdateProduct)
-	api.Delete("/posts/:id", handlers.DeleteProduct)
+	api.Get("/posts", handlers.GetPosts)
+	api.Post("/posts", handlers.CreatePost)
+	api.Get("/posts/:id", handlers.GetPost)
+	api.Put("/posts/:id", handlers.UpdatePost)
+	api.Delete("/posts/:id", handlers.DeletePost)
 }

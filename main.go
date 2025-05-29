@@ -1,9 +1,10 @@
 package main
 
 import (
-	"database"
 	"log"
-	"routes"
+
+	"moonglow/database"
+	"moonglow/routes"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/compress"
