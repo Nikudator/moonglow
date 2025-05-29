@@ -1,9 +1,10 @@
 package handlers
 
 import (
-	"../database"
-	"../models"
-	"github.com/gofiber/fiber"
+	"database"
+	"models"
+
+	"github.com/gofiber/fiber/v2"
 )
 
 // получение списка всех продуктов

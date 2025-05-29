@@ -1,7 +1,8 @@
 package routes
 
 import (
-	"../handlers"
+	"handlers"
+
 	"github.com/gofiber/fiber"
 )
 
