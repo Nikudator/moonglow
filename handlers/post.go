@@ -3,9 +3,11 @@ package handlers
 import (
 	"moonglow/database"
 	"moonglow/models"
-
+	"github.com/google/uuid"
 	"github.com/gofiber/fiber/v2"
 )
+
+newUUID := uuid.new
 
 // получение списка всех продуктов
 func GetPosts(c *fiber.Ctx) error {
