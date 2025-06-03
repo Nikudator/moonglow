@@ -37,7 +37,7 @@ func CreatePost(c *fiber.Ctx) error {
 	}
 
 	_, err := database.DB.Exec("INSERT INTO posts (id, title, lead, body, created, udated, author) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-		uuid.new, post.Title, post.Lead, post.Body, post.Created, post.Updated, post.Author)
+		uuid.new, post.Title, post.Lead, post.Body, time.Now().Unix(), time.Now().Unix(), post.Author)
 	if err != nil {
 		return c.Status(500).SendString("Ошибка вставки данных в базу")
 	}
