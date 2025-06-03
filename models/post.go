@@ -6,6 +6,6 @@ type Post struct {
 	Lead    string `json:"lead"`
 	Body    string `json:"body"`
 	Created int64  `json:"created"`
-	Updated int64  `json:"udated"`
+	Updated int64  `json:"updated"`
 	Author  string `json:"author"`
 }
