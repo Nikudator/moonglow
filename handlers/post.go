@@ -3,13 +3,12 @@ package handlers
 import (
 	"moonglow/database"
 	"moonglow/models"
-	"github.com/google/uuid"
+	"time"
+
 	"github.com/gofiber/fiber/v2"
 )
 
-newUUID := uuid.new
-
-// получение списка всех продуктов
+// получение списка всех постов
 func GetPosts(c *fiber.Ctx) error {
 	rows, err := database.DB.Query("SELECT id, title, lead, body, created, udated, author FROM posts")
 	if err != nil {
@@ -30,7 +29,7 @@ func GetPosts(c *fiber.Ctx) error {
 	return c.JSON(posts)
 }
 
-// создание нового продукта
+// создание нового поста
 func CreatePost(c *fiber.Ctx) error {
 	post := new(models.Post)
 	if err := c.BodyParser(post); err != nil {
@@ -46,21 +45,21 @@ func CreatePost(c *fiber.Ctx) error {
 	return c.Status(201).SendString("Пост успешно создан")
 }
 
-// получение продукта по ID
+// получение поста по ID
 func GetPost(c *fiber.Ctx) error {
 	id := c.Params("id")
 	row := database.DB.QueryRow("SELECT id, title, lead, body, created, udated, author FROM posts WHERE id = $1", id)
 
 	var post models.Post
-	err := row.Scan(&post.ID, &post.Name, &post.Description, &post.Price, &post.Stock, &post.ImageURL)
+	err := row.Scan(&post.ID, &post.Title, &post.Lead, &post.Body, &post.Created, &post.Updated, &post.Author)
 	if err != nil {
-		return c.Status(404).SendString("Продукт не найден")
+		return c.Status(404).SendString("Пост не найден")
 	}
 
 	return c.JSON(post)
 }
 
-// обновление продукта
+// обновление поста
 func UpdatePost(c *fiber.Ctx) error {
 	id := c.Params("id")
 	post := new(models.Post)
@@ -69,22 +68,22 @@ func UpdatePost(c *fiber.Ctx) error {
 		return c.Status(400).SendString("Неверный формат запроса")
 	}
 
-	_, err := database.DB.Exec("UPDATE products SET name = $1, description = $2, price = $3, stock = $4, image_url = $5 WHERE id = $6",
-		post.Name, post.Description, post.Price, post.Stock, post.ImageURL, id)
+	_, err := database.DB.Exec("UPDATE posts SET title = $1, lead = $2, body = $3, udated = $4, author = $5 WHERE id = $6",
+		post.Title, post.Lead, post.Body, time.Now().Unix(), post.Author, id)
 	if err != nil {
 		return c.Status(500).SendString("Ошибка обновления данных")
 	}
 
-	return c.SendString("Продукт успешно обновлён")
+	return c.SendString("Пост успешно обновлён")
 }
 
-// удаление продукта
+// удаление поста
 func DeletePost(c *fiber.Ctx) error {
 	id := c.Params("id")
-	_, err := database.DB.Exec("DELETE FROM products WHERE id = $1", id)
+	_, err := database.DB.Exec("DELETE FROM posts WHERE id = $1", id)
 	if err != nil {
-		return c.Status(500).SendString("Ошибка удаления продукта")
+		return c.Status(500).SendString("Ошибка удаления поста")
 	}
 
-	return c.SendString("Продукт успешно удалён")
+	return c.SendString("Пост успешно удалён")
 }
