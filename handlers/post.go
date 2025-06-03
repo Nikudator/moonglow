@@ -11,7 +11,7 @@ newUUID := uuid.new
 
 // получение списка всех продуктов
 func GetPosts(c *fiber.Ctx) error {
-	rows, err := database.DB.Query("SELECT id, name, description, price, stock, image_url FROM products")
+	rows, err := database.DB.Query("SELECT id, title, lead, body, created, udated, author FROM posts")
 	if err != nil {
 		return c.Status(500).SendString("Ошибка выполнения запроса к базе данных")
 	}
@@ -37,19 +37,19 @@ func CreatePost(c *fiber.Ctx) error {
 		return c.Status(400).SendString("Неверный формат запроса")
 	}
 
-	_, err := database.DB.Exec("INSERT INTO products (name, description, price, stock, image_url) VALUES ($1, $2, $3, $4, $5)",
-		post.Name, post.Description, post.Price, post.Stock, post.ImageURL)
+	_, err := database.DB.Exec("INSERT INTO posts (id, title, lead, body, created, udated, author) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+		uuid.new, post.Title, post.Lead, post.Body, post.Created, post.Updated, post.Author)
 	if err != nil {
 		return c.Status(500).SendString("Ошибка вставки данных в базу")
 	}
 
-	return c.Status(201).SendString("Продукт успешно создан")
+	return c.Status(201).SendString("Пост успешно создан")
 }
 
 // получение продукта по ID
 func GetPost(c *fiber.Ctx) error {
 	id := c.Params("id")
-	row := database.DB.QueryRow("SELECT id, name, description, price, stock, image_url FROM products WHERE id = $1", id)
+	row := database.DB.QueryRow("SELECT id, title, lead, body, created, udated, author FROM posts WHERE id = $1", id)
 
 	var post models.Post
 	err := row.Scan(&post.ID, &post.Name, &post.Description, &post.Price, &post.Stock, &post.ImageURL)
